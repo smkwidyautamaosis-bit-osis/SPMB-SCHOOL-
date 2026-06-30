@@ -86,7 +86,7 @@ export function StatusUpdateForm({ pendaftarId, currentStatus }: StatusUpdateFor
               setToast(null);
             }}
             className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 appearance-none
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>

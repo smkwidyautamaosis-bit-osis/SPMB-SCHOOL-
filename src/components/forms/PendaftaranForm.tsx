@@ -11,7 +11,21 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { FileUploadField } from '@/components/ui/FileUploadField';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import type { Jurusan } from '@/types';
+
+// Helper untuk section header
+const SectionHeader = ({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle?: string }) => (
+  <div className="flex items-start gap-3 mb-6 pb-4 border-b border-slate-100">
+    <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 flex-shrink-0">
+      {icon}
+    </div>
+    <div>
+      <h3 className="font-bold text-rose-900">{title}</h3>
+      {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
+    </div>
+  </div>
+);
 
 // ==============================
 // Zod Schema validasi form
@@ -108,28 +122,7 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
     defaultValues: { jenis_kelamin: undefined, jurusan_id: '' },
   });
 
-  // ==============================
-  // Generate nomor pendaftaran
-  // ==============================
-  const generateNomorPendaftaran = async (): Promise<string> => {
-    // Ambil nomor terakhir dari DB untuk mendapatkan increment
-    const { data } = await supabase
-      .from('pendaftar')
-      .select('nomor_pendaftaran')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
 
-    let nextNumber = 1;
-    if (data?.nomor_pendaftaran) {
-      // Format: SPMB-2026-XXXX → ambil 4 digit terakhir
-      const parts = data.nomor_pendaftaran.split('-');
-      const lastNum = parseInt(parts[parts.length - 1], 10);
-      if (!isNaN(lastNum)) nextNumber = lastNum + 1;
-    }
-
-    return `SPMB-2026-${String(nextNumber).padStart(4, '0')}`;
-  };
 
   // ==============================
   // Upload satu file ke Storage
@@ -178,17 +171,12 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
     setSubmitError(null);
 
     try {
-      // Step 1: Generate nomor pendaftaran
-      setSubmitStep('Membuat nomor pendaftaran...');
-      const nomorPendaftaran = await generateNomorPendaftaran();
-
-      // Step 2: Insert data pendaftar ke DB
+      // Step 1: Insert data pendaftar ke DB (nomor_pendaftaran otomatis dari trigger)
       setSubmitStep('Menyimpan data pendaftaran...');
       const { data: pendaftarData, error: insertError } = await supabase
         .from('pendaftar')
         .insert({
           user_id: userId,
-          nomor_pendaftaran: nomorPendaftaran,
           nama_lengkap: data.nama_lengkap,
           nisn: data.nisn,
           jenis_kelamin: data.jenis_kelamin,
@@ -202,7 +190,7 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
           jurusan_id: data.jurusan_id,
           status: 'Menunggu Verifikasi',
         })
-        .select('id')
+        .select('id, nomor_pendaftaran')
         .single();
 
       if (insertError) throw new Error(`Gagal menyimpan data: ${insertError.message}`);
@@ -234,7 +222,7 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
 
       // Step 5: Redirect ke /status dengan nomor pendaftaran di query
       setSubmitStep('Pendaftaran berhasil! Mengalihkan...');
-      router.push(`/status?success=1&nomor=${encodeURIComponent(nomorPendaftaran)}`);
+      router.push(`/status?success=1&nomor=${encodeURIComponent(pendaftarData.nomor_pendaftaran)}`);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Terjadi kesalahan tidak dikenal';
       setSubmitError(message);
@@ -249,18 +237,7 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
     label: j.nama_jurusan,
   }));
 
-  // Helper untuk section header
-  const SectionHeader = ({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle?: string }) => (
-    <div className="flex items-start gap-3 mb-6 pb-4 border-b border-slate-100">
-      <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700 flex-shrink-0">
-        {icon}
-      </div>
-      <div>
-        <h3 className="font-bold text-blue-900">{title}</h3>
-        {subtitle && <p className="text-sm text-slate-500">{subtitle}</p>}
-      </div>
-    </div>
-  );
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
@@ -268,8 +245,9 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
         <SectionHeader
           icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path className="fill-rose-900" d="M12 3L1 9L5 11.18V17C5 17 8.5 21 12 21C15.5 21 19 17 19 17V11.18L21 10.09V17H23V9L12 3ZM12 14C9.79 14 8 12.21 8 10C8 7.79 9.79 6 12 6C14.21 6 16 7.79 16 10C16 12.21 14.21 14 12 14Z" />
+              <path className="fill-amber-500" d="M12 12C12 12 10 14 10 15.5C10 16.88 10.9 18 12 18C13.1 18 14 16.88 14 15.5C14 14 12 12 12 12Z" />
             </svg>
           }
           title="Data Diri Calon Siswa"
@@ -363,8 +341,11 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
         <SectionHeader
           icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path className="fill-amber-500" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.19l7 3.11V11c0 4.52-2.98 8.69-7 9.93-4.02-1.24-7-5.41-7-9.93V6.3l7-3.11z" />
+              <g transform="translate(3.6, 3.6) scale(0.7)">
+                <path className="fill-rose-900" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </g>
             </svg>
           }
           title="Data Orang Tua / Wali"
@@ -398,8 +379,9 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
         <SectionHeader
           icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path className="fill-rose-900" d="M12 3L1 9V21H23V9L12 3ZM12 5.5L19 9V21H16V14H8V21H5V9L12 5.5Z" />
+              <path className="fill-amber-500" d="M10 16H14V21H10V16ZM10 10H14V12H10V10ZM6 10H8V12H6V10ZM16 10H18V12H16V10Z" />
             </svg>
           }
           title="Asal Sekolah"
@@ -419,8 +401,9 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
         <SectionHeader
           icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path className="fill-rose-900" d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM6 20V4H13V9H18V20H6Z" />
+              <path className="fill-amber-500" d="M16 11.5L11.5 16L8.5 13L9.5 12L11.5 14L15 10.5L16 11.5Z" />
             </svg>
           }
           title="Pilihan Jurusan"
@@ -448,8 +431,9 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
         <SectionHeader
           icon={
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path className="fill-rose-900" d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM6 20V4H13V9H18V20H6Z" />
+              <path className="fill-amber-500" d="M16 11.5L11.5 16L8.5 13L9.5 12L11.5 14L15 10.5L16 11.5Z" />
             </svg>
           }
           title="Upload Dokumen"
@@ -520,12 +504,12 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
 
         {/* Progress state */}
         {isSubmitting && submitStep && (
-          <div className="mb-6 p-4 rounded-xl bg-blue-50 border border-blue-100 flex items-center gap-3">
-            <svg className="animate-spin w-5 h-5 text-blue-600 flex-shrink-0" fill="none" viewBox="0 0 24 24">
+          <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-100 flex items-center gap-3">
+            <svg className="animate-spin w-5 h-5 text-rose-600 flex-shrink-0" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            <p className="text-sm text-blue-700 font-medium">{submitStep}</p>
+            <p className="text-sm text-rose-700 font-medium">{submitStep}</p>
           </div>
         )}
 

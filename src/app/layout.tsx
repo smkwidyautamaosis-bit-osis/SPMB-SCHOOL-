@@ -9,20 +9,27 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'SPMB SMK Widya Utama 2026 — Sistem Penerimaan Murid Baru',
-    template: '%s | SPMB SMK Widya Utama',
-  },
-  description:
-    'Sistem Penerimaan Murid Baru (SPMB) SMK Widya Utama 2026. Daftarkan dirimu secara online untuk program keahlian Perhotelan, Tata Boga, Pariwisata, dan Perbankan.',
-  keywords: ['SPMB', 'SMK Widya Utama', 'penerimaan siswa baru', 'pendaftaran online', '2026'],
-  openGraph: {
-    title: 'SPMB SMK Widya Utama 2026',
-    description: 'Daftar online untuk masuk SMK Widya Utama. Mudah, cepat, dan transparan.',
-    type: 'website',
-  },
-};
+import { createClient } from '@/lib/supabase/server';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('pengaturan_sistem').select('tahun_periode').eq('id', 1).single();
+  const tahun = data?.tahun_periode?.split('/')[0] || '2026'; // e.g. "2026/2027" -> "2026"
+  
+  return {
+    title: {
+      default: `SPMB SMK Widya Utama ${tahun} — Sistem Penerimaan Murid Baru`,
+      template: '%s | SPMB SMK Widya Utama',
+    },
+    description: `Sistem Penerimaan Murid Baru (SPMB) SMK Widya Utama ${tahun}. Daftarkan dirimu secara online untuk program keahlian Perhotelan, Tata Boga, Pariwisata, dan Perbankan.`,
+    keywords: ['SPMB', 'SMK Widya Utama', 'penerimaan siswa baru', 'pendaftaran online', tahun],
+    openGraph: {
+      title: `SPMB SMK Widya Utama ${tahun}`,
+      description: 'Daftar online untuk masuk SMK Widya Utama. Mudah, cepat, dan transparan.',
+      type: 'website',
+    },
+  };
+}
 
 /**
  * Root layout — hanya menyediakan <html> dan <body> dengan font.

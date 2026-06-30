@@ -24,13 +24,13 @@ export function Button({
 
   const variantClasses = {
     primary:
-      'bg-blue-900 text-white hover:bg-blue-800 focus:ring-blue-500 shadow-md hover:shadow-lg active:scale-[0.98]',
+      'bg-rose-900 text-white hover:bg-rose-800 focus:ring-rose-500 shadow-md hover:shadow-lg active:scale-[0.98]',
     secondary:
       'bg-amber-500 text-white hover:bg-amber-400 focus:ring-amber-400 shadow-md hover:shadow-lg active:scale-[0.98]',
     outline:
-      'border-2 border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white focus:ring-blue-500 active:scale-[0.98]',
+      'border-2 border-rose-900 text-rose-900 hover:bg-rose-900 hover:text-white focus:ring-rose-500 active:scale-[0.98]',
     ghost:
-      'text-blue-900 hover:bg-blue-50 focus:ring-blue-500 active:scale-[0.98]',
+      'text-rose-900 hover:bg-rose-50 focus:ring-rose-500 active:scale-[0.98]',
   };
 
   const sizeClasses = {

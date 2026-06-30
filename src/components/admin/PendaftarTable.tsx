@@ -55,7 +55,35 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
     });
 
   const selectClass =
-    'px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all';
+    'px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all';
+
+  const handleExportCSV = () => {
+    // Header CSV
+    const headers = ['Nomor Pendaftaran', 'Nama Lengkap', 'NISN', 'Asal Sekolah', 'Pilihan Jurusan', 'No HP', 'Status'];
+    
+    // Baris data (menggunakan data yang difilter saat ini)
+    const rows = filtered.map(p => [
+      p.nomor_pendaftaran,
+      `"${p.nama_lengkap}"`, // kutip untuk menghindari error jika ada koma di nama
+      `"${p.nisn}"`, // perlakukan sebagai string
+      `"${p.asal_sekolah}"`,
+      `"${p.jurusan?.nama_jurusan || '-'}"`,
+      `"${p.no_hp || '-'}"`,
+      p.status
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    
+    // Trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'Data_Pendaftar_SPMB_WidyaUtama.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="space-y-4">
@@ -82,7 +110,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
             placeholder="Cari nama atau nomor pendaftaran..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
           />
           {search && (
             <button
@@ -129,6 +157,17 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
             ))}
           </select>
         </div>
+
+        {/* Export Button */}
+        <button
+          onClick={handleExportCSV}
+          className="flex items-center gap-2 px-4 py-2 bg-rose-900 hover:bg-rose-800 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm whitespace-nowrap"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Export CSV
+        </button>
       </div>
 
       {/* Hasil count */}
@@ -164,7 +203,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
                   setFilterJurusan('');
                   setFilterStatus('');
                 }}
-                className="mt-4 text-sm text-blue-600 hover:text-blue-800 underline"
+                className="mt-4 text-sm text-rose-600 hover:text-rose-800 underline"
               >
                 Reset semua filter
               </button>
@@ -185,7 +224,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
                   ].map((col) => (
                     <th
                       key={col}
-                      className="px-5 py-3.5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap"
+                      className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
                     >
                       {col}
                     </th>
@@ -197,25 +236,25 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
                   <tr
                     key={p.id}
                     onClick={() => router.push(`/admin/pendaftar/${p.id}`)}
-                    className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
+                    className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
-                    <td className="px-5 py-4 font-mono text-xs font-semibold text-blue-800 whitespace-nowrap">
+                    <td className="px-6 py-4 font-mono text-xs font-semibold text-rose-800 whitespace-nowrap">
                       {p.nomor_pendaftaran}
                     </td>
-                    <td className="px-5 py-4 font-medium text-slate-800 whitespace-nowrap">
+                    <td className="px-6 py-4 font-medium text-slate-800 whitespace-nowrap">
                       {p.nama_lengkap}
                     </td>
-                    <td className="px-5 py-4 text-slate-600 whitespace-nowrap">
+                    <td className="px-6 py-4 text-slate-600 whitespace-nowrap">
                       {p.jurusan?.nama_jurusan ?? '-'}
                     </td>
-                    <td className="px-5 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <StatusBadge status={p.status} size="sm" />
                     </td>
-                    <td className="px-5 py-4 text-slate-400 text-xs whitespace-nowrap">
+                    <td className="px-6 py-4 text-slate-400 text-xs whitespace-nowrap">
                       {formatTanggal(p.created_at)}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className="text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-medium flex items-center gap-1 whitespace-nowrap">
+                    <td className="px-6 py-4">
+                      <span className="text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-medium flex items-center gap-1 whitespace-nowrap">
                         Lihat Detail
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

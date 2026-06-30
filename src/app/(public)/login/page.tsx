@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import Image from 'next/image';
 
 const loginSchema = z.object({
   email: z
@@ -24,7 +25,16 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
+  const [tahunSingkat, setTahunSingkat] = useState('2026');
   const supabase = createClient();
+
+  useEffect(() => {
+    supabase.from('pengaturan_sistem').select('tahun_periode').eq('id', 1).single().then(({data}) => {
+      if (data?.tahun_periode) {
+        setTahunSingkat(data.tahun_periode.split('/')[0]);
+      }
+    });
+  }, [supabase]);
 
   const {
     register,
@@ -65,27 +75,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 pt-24 pb-12">
-      {/* Background decorative */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 pt-24 pb-12 relative bg-[url('/images/backgroundspmb.png')] bg-cover bg-center bg-no-repeat">
+      {/* Overlay Background */}
+      <div className="absolute inset-0 bg-rose-950/75 backdrop-blur-[2px] z-0" />
 
-      <div className="relative w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md">
         {/* Card */}
         <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-10">
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center shadow-lg mb-4">
-              <span className="text-white font-black text-xl">WU</span>
+            <div className="relative w-20 h-20 mb-5">
+              <Image 
+                src="/images/logo_wu.png" 
+                alt="Logo SPMB SMK Widya Utama" 
+                fill
+                className="object-cover"
+                sizes="80px"
+              />
             </div>
-            <h1 className="text-2xl font-extrabold text-blue-900 text-center">
-              Masuk ke SPMB
+            <h1 className="text-2xl font-extrabold text-rose-900 text-center">
+              Masuk ke SPMB SMK Widya Utama
             </h1>
             <p className="text-slate-500 text-sm text-center mt-1">
-              SMK Widya Utama — Penerimaan Murid Baru 2026
+              SMK Widya Utama — Penerimaan Murid Baru {tahunSingkat}
             </p>
           </div>
 
@@ -102,7 +114,7 @@ export default function LoginPage() {
               </h2>
               <p className="text-slate-500 text-sm leading-relaxed mb-6">
                 Link login telah dikirim ke{' '}
-                <strong className="text-blue-900">{submittedEmail}</strong>.
+                <strong className="text-rose-900">{submittedEmail}</strong>.
                 Silakan cek inbox atau folder{' '}
                 <span className="font-medium">spam/junk</span> kamu.
               </p>
@@ -118,7 +130,7 @@ export default function LoginPage() {
 
               <button
                 onClick={() => { setIsSuccess(false); setSubmittedEmail(''); }}
-                className="mt-4 text-sm text-blue-700 hover:text-blue-900 underline transition-colors"
+                className="mt-4 text-sm text-rose-700 hover:text-rose-900 underline transition-colors"
               >
                 Gunakan email berbeda
               </button>

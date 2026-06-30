@@ -10,50 +10,29 @@ interface StatCardProps {
 
 const accentConfig = {
   blue: {
-    bg: 'bg-blue-50',
-    border: 'border-blue-100',
-    iconBg: 'bg-blue-100',
-    iconText: 'text-blue-700',
-    valueText: 'text-blue-900',
-    labelText: 'text-blue-600',
+    iconBg: 'bg-rose-50/80',
+    valueText: 'text-rose-950',
   },
   yellow: {
-    bg: 'bg-amber-50',
-    border: 'border-amber-100',
-    iconBg: 'bg-amber-100',
-    iconText: 'text-amber-700',
-    valueText: 'text-amber-900',
-    labelText: 'text-amber-600',
+    iconBg: 'bg-amber-50/80',
+    valueText: 'text-rose-950',
   },
   green: {
-    bg: 'bg-green-50',
-    border: 'border-green-100',
-    iconBg: 'bg-green-100',
-    iconText: 'text-green-700',
-    valueText: 'text-green-900',
-    labelText: 'text-green-600',
+    iconBg: 'bg-emerald-50/80', 
+    valueText: 'text-rose-950',
   },
   red: {
-    bg: 'bg-red-50',
-    border: 'border-red-100',
-    iconBg: 'bg-red-100',
-    iconText: 'text-red-700',
-    valueText: 'text-red-900',
-    labelText: 'text-red-600',
+    iconBg: 'bg-rose-50/80',
+    valueText: 'text-rose-950',
   },
   slate: {
-    bg: 'bg-slate-50',
-    border: 'border-slate-200',
-    iconBg: 'bg-slate-100',
-    iconText: 'text-slate-600',
-    valueText: 'text-slate-900',
-    labelText: 'text-slate-500',
+    iconBg: 'bg-slate-50/80',
+    valueText: 'text-rose-950',
   },
 };
 
 /**
  * Komponen StatCard untuk menampilkan angka statistik di dashboard admin.
- * Mendukung 5 accent color sesuai palet status pendaftaran.
  */
 export function StatCard({
   label,
@@ -67,25 +46,24 @@ export function StatCard({
   return (
     <div
       className={`
-        rounded-2xl border p-5 flex items-center gap-4
-        transition-all duration-200 hover:shadow-md hover:-translate-y-0.5
-        ${cfg.bg} ${cfg.border}
+        bg-white rounded-2xl p-4 flex items-center justify-between
+        shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-0.5
       `}
     >
+      <div className="flex flex-col">
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
+        <p className={`text-2xl font-black ${cfg.valueText} tracking-tight leading-none`}>{value}</p>
+        {subLabel && (
+          <p className="text-[10px] font-medium text-slate-400 mt-1">{subLabel}</p>
+        )}
+      </div>
       {icon && (
         <div
-          className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconText}`}
+          className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ml-3`}
         >
           {icon}
         </div>
       )}
-      <div>
-        <p className={`text-3xl font-black ${cfg.valueText}`}>{value}</p>
-        <p className={`text-sm font-medium ${cfg.labelText}`}>{label}</p>
-        {subLabel && (
-          <p className="text-xs text-slate-400 mt-0.5">{subLabel}</p>
-        )}
-      </div>
     </div>
   );
 }

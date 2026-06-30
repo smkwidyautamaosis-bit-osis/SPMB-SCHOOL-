@@ -26,13 +26,21 @@ export default async function AdminPendaftarPage() {
     .select('id, nama_jurusan')
     .order('nama_jurusan') as { data: Pick<Jurusan, 'id' | 'nama_jurusan'>[] | null };
 
+  // Ambil pengaturan sistem
+  const { data: setting } = await supabase
+    .from('pengaturan_sistem')
+    .select('tahun_periode')
+    .eq('id', 1)
+    .single();
+  const tahunSingkat = setting?.tahun_periode?.split('/')[0] || '2026';
+
   return (
     <div className="space-y-6">
       {/* Page header */}
       <div>
         <h2 className="text-2xl font-extrabold text-slate-800">Data Pendaftar</h2>
         <p className="text-slate-400 text-sm mt-1">
-          Kelola dan pantau seluruh pendaftar SPMB 2026
+          Kelola dan pantau seluruh pendaftar SPMB {tahunSingkat}
         </p>
       </div>
 

@@ -55,3 +55,4 @@ RLS aktif di semua tabel — user hanya boleh akses data miliknya sendiri (auth.
 4. JANGAN ubah/hapus RLS policy tanpa konfirmasi eksplisit.
 5. .env.local sudah berisi kredensial asli Supabase — JANGAN pernah commit ke git, JANGAN tampilkan isinya di chat/log.
 6. Setiap fitur baru: jelaskan dulu rencana perubahan sebelum eksekusi besar (terutama yang menyentuh schema DB).
+7. Untuk setiap penyelesaian task/tugas: jelaskan saja secara singkat apa yang diubah dan di file mana, TIDAK PERLU melampirkan full source code ke dalam jawaban agar chat tidak terlalu panjang.

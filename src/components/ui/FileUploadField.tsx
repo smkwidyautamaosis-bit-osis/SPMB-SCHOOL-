@@ -101,12 +101,12 @@ export function FileUploadField({
           relative flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed
           cursor-pointer transition-all duration-200 min-h-[120px]
           ${isDragging
-            ? 'border-blue-500 bg-blue-50 scale-[1.01]'
+            ? 'border-rose-500 bg-rose-50 scale-[1.01]'
             : fileName
               ? 'border-green-400 bg-green-50'
               : displayError
                 ? 'border-red-400 bg-red-50'
-                : 'border-slate-200 bg-slate-50 hover:border-blue-400 hover:bg-blue-50'
+                : 'border-slate-200 bg-slate-50 hover:border-rose-400 hover:bg-rose-50'
           }
         `}
       >
@@ -144,8 +144,8 @@ export function FileUploadField({
         ) : (
           /* State: Belum ada file */
           <>
-            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center">
+              <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>

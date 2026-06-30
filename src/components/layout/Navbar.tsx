@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -28,7 +29,7 @@ export function Navbar() {
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase.auth]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -48,20 +49,27 @@ export function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md'
-          : 'bg-transparent'
+          ? 'bg-white/95 backdrop-blur-md shadow-md py-2'
+          : 'bg-white/90 backdrop-blur-sm shadow-sm py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <span className="text-white font-black text-sm">WU</span>
+          <Link href="/" className="flex items-center gap-3 sm:gap-4 group min-w-0">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 flex-shrink-0">
+              <Image 
+                src="/images/logo_wu.png" 
+                alt="Logo SMK Widya Utama" 
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 48px, 64px"
+              />
             </div>
-            <div>
-              <p className="font-bold text-blue-900 leading-none text-sm">SMK Widya Utama</p>
-              <p className="text-xs text-amber-500 font-medium">SPMB 2026</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-rose-900 text-xs sm:text-sm md:text-base lg:text-xl tracking-tight leading-tight truncate">
+                SPMB SMK Widya Utama
+              </p>
             </div>
           </Link>
 
@@ -69,13 +77,13 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/#program"
-              className="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors"
+              className="text-sm font-medium text-slate-600 hover:text-rose-900 transition-colors"
             >
               Program Keahlian
             </Link>
             <Link
               href="/#jadwal"
-              className="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors"
+              className="text-sm font-medium text-slate-600 hover:text-rose-900 transition-colors"
             >
               Jadwal SPMB
             </Link>
@@ -123,14 +131,14 @@ export function Navbar() {
           <div className="md:hidden bg-white border-t border-slate-100 py-4 px-2 space-y-2 shadow-lg rounded-b-2xl">
             <Link
               href="/#program"
-              className="block px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-900 transition-colors"
+              className="block px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-rose-900 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Program Keahlian
             </Link>
             <Link
               href="/#jadwal"
-              className="block px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-900 transition-colors"
+              className="block px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-rose-900 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Jadwal SPMB
@@ -139,7 +147,7 @@ export function Navbar() {
               <>
                 <Link
                   href="/status"
-                  className="block px-4 py-2 rounded-xl text-sm font-medium text-blue-900 hover:bg-blue-50 transition-colors"
+                  className="block px-4 py-2 rounded-xl text-sm font-medium text-rose-900 hover:bg-rose-50 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Status Pendaftaran

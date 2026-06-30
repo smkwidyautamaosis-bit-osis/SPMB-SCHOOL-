@@ -1,5 +1,4 @@
 import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
 
 /**
  * Layout untuk halaman publik (/, /login, /daftar, /status).
@@ -14,7 +13,6 @@ export default function PublicLayout({
     <>
       <Navbar />
       <main className="flex-1">{children}</main>
-      <Footer />
     </>
   );
 }

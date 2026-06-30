@@ -45,20 +45,6 @@ export default async function AdminLayout({
 
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="bg-white border-b border-slate-100 px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-sm font-semibold text-slate-800">
-              Sistem Penerimaan Murid Baru 2026
-            </h1>
-            <p className="text-xs text-slate-400">Panel Administrasi</p>
-          </div>
-          <div className="flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-full px-3 py-1.5">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-xs font-medium text-amber-700">Super Admin</span>
-          </div>
-        </header>
-
         {/* Page content */}
         <main className="flex-1 p-8 overflow-auto">{children}</main>
       </div>
