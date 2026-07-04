@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -31,6 +32,12 @@ export default async function HomePage() {
     .from('hero_images')
     .select('*')
     .order('created_at', { ascending: false });
+
+  // Ambil data FAQs
+  const { data: faqsData } = await supabase
+    .from('faqs')
+    .select('*')
+    .order('created_at', { ascending: true });
 
   const tahunPeriode = setting?.tahun_periode || '2026/2027';
   const tahunSingkat = tahunPeriode.split('/')[0];
@@ -243,6 +250,34 @@ export default async function HomePage() {
       {/* ===== PROGRAM KEAHLIAN SECTION ===== */}
       <section id="program" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
+          {/* ── Storytelling Hook ── */}
+          <div className="flex flex-col items-center justify-center text-center pb-12">
+            {/* Speech Bubble */}
+            <div
+              className="bg-rose-50 text-rose-900 px-6 py-4 rounded-2xl border border-rose-100 font-medium inline-block mb-6 max-w-sm sm:max-w-md shadow-sm text-sm sm:text-base leading-relaxed"
+              style={{ animation: 'bounceSlow 3s ease-in-out infinite' }}
+            >
+              💬 &ldquo;Aduh... banyak pilihan keren, tapi aku cocoknya masuk jurusan apa ya di SMK Widya Utama?&rdquo;
+            </div>
+
+            {/* Karakter Bingung */}
+            <div className="w-full max-w-xs sm:max-w-sm">
+              <Image
+                src="/images/KARAKTER_BINGUNG.svg"
+                alt="Karakter siswa yang sedang bingung memilih jurusan"
+                width={400}
+                height={360}
+                className="w-full h-auto object-contain"
+                priority={false}
+              />
+            </div>
+
+            {/* Scroll Indicator Hook */}
+            <p className="mt-4 text-sm text-slate-500 font-medium animate-bounce">
+              Gak usah bingung, yuk scroll ke bawah buat temuin jawabannya! 👇
+            </p>
+          </div>
+
           {/* Section header */}
           <div className="text-center mb-14">
             <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider">
@@ -320,6 +355,272 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ===== EKSTRAKURIKULER SECTION ===== */}
+      <section className="bg-white py-16 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center mb-10">
+          <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider mb-2">
+            Aktivitas Siswa
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-rose-900 mb-4">
+            Kembangkan Bakatmu Bersama<br />Ekstrakurikuler Kami
+          </h2>
+          <p className="text-slate-500 max-w-xl">
+            Selain akademik, kami menyediakan berbagai kegiatan ekstrakurikuler untuk mendukung potensi dan passion kamu di luar kelas.
+          </p>
+
+          {/* Ilustrasi utama */}
+          <div className="mt-8 w-full max-w-lg relative overflow-hidden">
+            <Image
+              src="/images/orang_dikelilingi_logo.svg"
+              alt="Ilustrasi Ekstrakurikuler SMK Widya Utama"
+              width={560}
+              height={420}
+              className="w-full h-auto object-contain"
+              priority={false}
+            />
+            {/* Bottom fade-out gradient */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white via-white/40 to-transparent pointer-events-none z-10" />
+          </div>
+        </div>
+
+        {/* Infinite Marquee Logo Track */}
+        <div
+          className="relative flex w-full overflow-hidden select-none"
+          style={{
+            WebkitMaskImage: 'linear-gradient(to right, transparent, white 15%, white 85%, transparent)',
+            maskImage: 'linear-gradient(to right, transparent, white 15%, white 85%, transparent)',
+          }}
+        >
+          {/* Track — x4 for seamless loop on wide screens */}
+          <div
+            className="flex flex-nowrap items-center gap-16 py-4"
+            style={{ animation: 'marquee 30s linear infinite', width: 'max-content' }}
+          >
+            {Array.from({ length: 4 }, () => [
+              { src: '/images/MOBILE LEGENDS.svg', alt: 'Mobile Legends' },
+              { src: '/images/IRMA.svg', alt: 'IRMA' },
+              { src: '/images/PASKIBRA.svg', alt: 'Paskibra' },
+              { src: '/images/PRAMUKA.svg', alt: 'Pramuka' },
+            ]).flat().map((logo, idx) => (
+              <div key={idx} className="flex-shrink-0 flex flex-col items-center gap-2 group">
+                <div
+                  className="w-20 h-20 relative"
+                  style={{
+                    animation: 'waveScale 4s ease-in-out infinite',
+                    animationDelay: `${(idx % 4) * 0.5}s`,
+                  }}
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    fill
+                    className="object-contain transition-transform duration-300 group-hover:scale-125"
+                    sizes="80px"
+                  />
+                </div>
+                <span className="text-xs font-semibold text-slate-500 group-hover:text-rose-700 transition-colors duration-300 tracking-wide uppercase">
+                  {logo.alt}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== GALERI FASILITAS SECTION ===== */}
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider">
+              Infrastruktur Unggulan
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-rose-900 mt-2 mb-4">
+              Fasilitas Belajar &amp; Laboratorium Modern
+            </h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">
+              Praktek langsung dengan standar industri menggunakan fasilitas laboratorium terbaik di kelasnya.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Lab Kamar Simulasi Perhotelan',
+                subtitle: 'Mockup Room standar bintang 4',
+                icon: '🏨',
+                gradient: 'from-rose-100 to-rose-200',
+                accent: 'bg-rose-900',
+              },
+              {
+                title: 'Kitchen Lab Nusantara & Internasional',
+                subtitle: 'Tata Boga dengan peralatan profesional',
+                icon: '👨‍🍳',
+                gradient: 'from-amber-100 to-orange-200',
+                accent: 'bg-amber-600',
+              },
+              {
+                title: 'Bank Mini & Lab Akuntansi',
+                subtitle: 'Simulasi transaksi perbankan nyata',
+                icon: '🏦',
+                gradient: 'from-slate-100 to-slate-200',
+                accent: 'bg-slate-700',
+              },
+            ].map((item) => (
+              <div key={item.title} className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-slate-100">
+                {/* Mockup Image Area */}
+                <div className={`relative h-52 bg-gradient-to-br ${item.gradient} flex items-center justify-center overflow-hidden`}>
+                  <span className="text-8xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 select-none">
+                    {item.icon}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                </div>
+                {/* Info */}
+                <div className="p-5">
+                  <span className={`inline-block text-white text-xs font-bold px-3 py-1 rounded-full mb-3 ${item.accent}`}>
+                    Laboratorium
+                  </span>
+                  <h3 className="font-extrabold text-rose-900 text-base leading-tight mb-1">{item.title}</h3>
+                  <p className="text-slate-500 text-sm">{item.subtitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TIMELINE ALUR PENDAFTARAN SECTION ===== */}
+      <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider">
+              Cara Daftar
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-rose-900 mt-2 mb-4">
+              Alur Pendaftaran Siswa Baru
+            </h2>
+            <p className="text-slate-500 max-w-xl mx-auto">
+              Proses pendaftaran mudah dan transparan, ikuti 3 langkah praktis berikut ini.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-0 lg:gap-0">
+            {[
+              {
+                num: '1',
+                title: 'Isi Formulir Online',
+                desc: 'Mengisi data diri dan memilih jurusan di web ini.',
+                icon: '📝',
+              },
+              {
+                num: '2',
+                title: 'Validasi & Wawancara',
+                desc: 'Datang ke sekolah membawa berkas untuk konsultasi minat bakat.',
+                icon: '🤝',
+              },
+              {
+                num: '3',
+                title: 'Daftar Ulang & Atribut',
+                desc: 'Penyelesaian administrasi dan pengambilan seragam sekolah.',
+                icon: '🎒',
+              },
+            ].map((step, idx, arr) => (
+              <div key={step.num} className="flex lg:flex-col items-start lg:items-center flex-1 relative">
+                {/* Connector line (right side on desktop, bottom on mobile) */}
+                {idx < arr.length - 1 && (
+                  <>
+                    {/* Desktop line */}
+                    <div className="hidden lg:block absolute top-6 left-[calc(50%+2rem)] right-0 h-0.5 bg-gradient-to-r from-rose-300 to-rose-100 z-0" />
+                    {/* Mobile line */}
+                    <div className="lg:hidden absolute left-6 top-14 bottom-0 w-0.5 h-12 bg-gradient-to-b from-rose-300 to-rose-100" />
+                  </>
+                )}
+
+                {/* Step card */}
+                <div className="flex lg:flex-col items-start lg:items-center gap-4 lg:gap-3 bg-white border border-rose-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 p-5 lg:p-6 w-full lg:text-center z-10 mx-0 lg:mx-3">
+                  {/* Number circle */}
+                  <div className="w-12 h-12 rounded-full bg-rose-900 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                    {step.num}
+                  </div>
+                  <div>
+                    <div className="text-2xl mb-1">{step.icon}</div>
+                    <h3 className="font-bold text-rose-900 text-base leading-tight">{step.title}</h3>
+                    <p className="text-slate-500 text-sm mt-1">{step.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ SECTION ===== */}
+      <section className="bg-slate-50 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider">
+              Bantuan &amp; Info
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-rose-900 mt-2 mb-4">
+              Pertanyaan yang Sering Diajukan
+            </h2>
+            <p className="text-slate-500 max-w-xl mx-auto">
+              Punya pertanyaan seputar SPMB SMK Widya Utama? Temukan jawabannya di bawah ini.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {(faqsData || []).map((item, idx) => (
+              <details key={idx} className="group bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <summary className="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none select-none font-semibold text-rose-900 hover:bg-rose-50 transition-colors duration-200">
+                  <span>{item.question}</span>
+                  <svg
+                    className="w-5 h-5 text-amber-500 flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div className="px-6 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-4">
+                  {item.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+
+          {/* WhatsApp CTA Hook */}
+          {setting?.faq_wa_number && (
+            <div className="mt-14 text-center">
+              <style dangerouslySetInnerHTML={{ __html: `
+                @keyframes floatButton {
+                  0%, 100% { transform: translateY(0); }
+                  50% { transform: translateY(-6px); }
+                }
+              `}} />
+              <p className="text-slate-600 font-medium mb-5">
+                Punya pertanyaan lain yang belum terjawab? Yuk, tanyakan langsung ke Admin pendaftaran kami!
+              </p>
+              <a
+                href={(() => {
+                  let num = setting.faq_wa_number.replace(/[\s-]/g, '');
+                  if (num.startsWith('0')) num = '62' + num.substring(1);
+                  return `https://wa.me/${num}`;
+                })()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-white rounded-full border border-emerald-100 shadow-md hover:shadow-xl hover:scale-105 px-6 py-3 transition-all duration-300 animate-[floatButton_3s_ease-in-out_infinite]"
+              >
+                <img
+                  src="/images/icon_aplikasi/whatsapp-wordmark.svg"
+                  alt="Hubungi Admin di WhatsApp"
+                  className="h-6 w-auto mx-auto object-contain"
+                />
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* ===== JADWAL SPMB SECTION ===== */}
       <section id="jadwal" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-rose-50">
         <div className="max-w-7xl mx-auto">
@@ -368,6 +669,53 @@ export default async function HomePage() {
                 </Card>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+      {/* ===== LOKASI SEKOLAH SECTION ===== */}
+      <section className="bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <span className="text-amber-500 font-semibold text-sm uppercase tracking-wider">
+              Temukan Kami
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-rose-900 mt-2 mb-4">
+              Lokasi SMK Widya Utama
+            </h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">
+              Yuk, datang langsung ke sekolah kami untuk informasi pendaftaran, konsultasi jurusan, atau melihat fasilitas belajar secara langsung!
+            </p>
+          </div>
+
+          {/* Maps Embed */}
+          <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.0534298696653!2d107.62011367431016!3d-7.002991168589555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e98241934451%3A0x6449cf3bec620168!2sSMK%20Widya%20Utama!5e0!3m2!1sid!2sid!4v1782888820720!5m2!1sid!2sid"
+              className="w-full h-[350px] md:h-[450px]"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Lokasi SMK Widya Utama di Google Maps"
+            />
+          </div>
+
+          {/* Info tambahan di bawah peta */}
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-slate-600">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-rose-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Jl. Adipati Agung Dalam No.2A Baleendah, Kabupaten Bandung, Propinsi Jawa Barat.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-rose-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Senin – Sabtu, 07.00 – 15.00 WIB</span>
+            </div>
           </div>
         </div>
       </section>

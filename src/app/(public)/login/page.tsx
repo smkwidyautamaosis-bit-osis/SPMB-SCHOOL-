@@ -75,9 +75,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 pt-24 pb-12 relative bg-[url('/images/backgroundspmb.png')] bg-cover bg-center bg-no-repeat">
-      {/* Overlay Background */}
-      <div className="absolute inset-0 bg-rose-950/75 backdrop-blur-[2px] z-0" />
+    <div className="min-h-screen w-full flex items-center justify-center px-4 pt-24 pb-12 relative overflow-hidden">
+      {/* Background Image — blurred */}
+      <div
+        className="absolute inset-0 bg-[url('/images/backgroundspmb.png')] bg-cover bg-center bg-no-repeat"
+        style={{ filter: 'blur(4px)', transform: 'scale(1.05)' }}
+      />
+      {/* Subtle dark overlay for contrast */}
+      <div className="absolute inset-0 bg-black/25 z-0" />
 
       <div className="relative z-10 w-full max-w-md">
         {/* Card */}
