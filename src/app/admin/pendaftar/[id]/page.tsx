@@ -173,7 +173,7 @@ export default async function AdminPendaftarDetailPage({
                 label="Tempat, Tanggal Lahir"
                 value={`${pendaftar.tempat_lahir}, ${formatTanggal(pendaftar.tanggal_lahir)}`}
               />
-              <InfoRow label="No. HP" value={pendaftar.no_hp} />
+              <InfoRow label="No. HP / WhatsApp" value={pendaftar.no_whatsapp} />
               <InfoRow label="Jurusan Pilihan" value={pendaftar.jurusan?.nama_jurusan ?? '-'} />
               <div className="sm:col-span-2">
                 <InfoRow label="Alamat" value={pendaftar.alamat} />

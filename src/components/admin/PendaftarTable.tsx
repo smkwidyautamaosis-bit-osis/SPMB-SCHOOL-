@@ -68,7 +68,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
       `"${p.nisn}"`, // perlakukan sebagai string
       `"${p.asal_sekolah}"`,
       `"${p.jurusan?.nama_jurusan || '-'}"`,
-      `"${p.no_hp || '-'}"`,
+      `"${p.no_whatsapp || '-'}"`,
       p.status
     ]);
 
