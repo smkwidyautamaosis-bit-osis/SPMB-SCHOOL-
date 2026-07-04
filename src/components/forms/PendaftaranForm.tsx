@@ -338,20 +338,87 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
           title="Pilihan Program Keahlian"
           subtitle="Pilih satu program keahlian yang kamu minati"
         />
-        <IconInput icon={I.book} label="Program Keahlian" required error={errors.jurusan_id?.message}>
+        
+        <div>
+          <label className="block text-sm font-bold text-slate-700 mb-4">
+            Program Keahlian <span className="text-rose-500">*</span>
+          </label>
           <Controller
             name="jurusan_id"
             control={control}
-            render={({ field }) => (
-              <select {...field} id="jurusan_id" className={selectCls(errors.jurusan_id?.message)}>
-                <option value="">-- Pilih Program Keahlian --</option>
-                {jurusanOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
+            render={({ field: { onChange, value } }) => (
+              <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {jurusanOptions.map((opt) => {
+                    const isSelected = value === opt.value;
+                    let iconSvg = null;
+                    let colorCls = '';
+                    
+                    if (opt.label.toLowerCase().includes('perhotelan')) {
+                      iconSvg = <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />;
+                      colorCls = 'text-rose-600 bg-rose-50 border-rose-200 ring-rose-500';
+                    } else if (opt.label.toLowerCase().includes('boga')) {
+                      iconSvg = <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />;
+                      colorCls = 'text-amber-600 bg-amber-50 border-amber-200 ring-amber-500';
+                    } else if (opt.label.toLowerCase().includes('akuntansi') || opt.label.toLowerCase().includes('bank')) {
+                      iconSvg = <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />;
+                      colorCls = 'text-slate-700 bg-slate-100 border-slate-300 ring-slate-700';
+                    } else if (opt.label.toLowerCase().includes('pariwisata')) {
+                      iconSvg = <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />;
+                      colorCls = 'text-emerald-600 bg-emerald-50 border-emerald-200 ring-emerald-500';
+                    } else {
+                      iconSvg = <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />;
+                      colorCls = 'text-blue-600 bg-blue-50 border-blue-200 ring-blue-500';
+                    }
+
+                    return (
+                      <label 
+                        key={opt.value} 
+                        className={`relative flex items-center p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                          isSelected 
+                            ? `border-transparent ring-2 ${colorCls} shadow-md scale-[1.02]` 
+                            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 hover:scale-[1.01]'
+                        }`}
+                      >
+                        <input 
+                          type="radio" 
+                          name="jurusan_id" 
+                          value={opt.value} 
+                          checked={isSelected} 
+                          onChange={() => onChange(opt.value)}
+                          className="sr-only" 
+                        />
+                        <div className={`w-12 h-12 flex-shrink-0 rounded-full flex items-center justify-center mr-4 transition-colors ${isSelected ? 'bg-white shadow-sm text-inherit' : 'bg-slate-100 text-slate-400'}`}>
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {iconSvg}
+                          </svg>
+                        </div>
+                        <div className="flex-grow">
+                          <span className={`block font-extrabold text-base ${isSelected ? 'text-slate-900' : 'text-slate-700'}`}>
+                            {opt.label}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <div className={`absolute top-4 right-4 ${colorCls.split(' ')[0]}`}>
+                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        )}
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.jurusan_id?.message && (
+                  <p className="mt-3 text-sm text-rose-500 flex items-center font-medium bg-rose-50 p-2.5 rounded-lg border border-rose-100">
+                    <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                    {errors.jurusan_id.message}
+                  </p>
+                )}
+              </div>
             )}
           />
-        </IconInput>
+        </div>
       </div>
 
       {/* ===== SECTION 2: DATA DIRI CALON SISWA ===== */}
