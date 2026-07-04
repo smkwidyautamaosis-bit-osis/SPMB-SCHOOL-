@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const loginSchema = z.object({
   email: z
@@ -23,9 +24,11 @@ type LoginForm = z.infer<typeof loginSchema>;
  * Setelah kirim link, tampilkan pesan sukses dan sembunyikan form.
  */
 export default function LoginPage() {
+  const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
   const [tahunSingkat, setTahunSingkat] = useState('2026');
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -35,6 +38,21 @@ export default function LoginPage() {
       }
     });
   }, [supabase]);
+
+  const handleDemoLogin = async () => {
+    setIsDemoLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: 'reviewer@demo.com',
+      password: 'passworddemo123',
+    });
+
+    if (error) {
+      setError('email', { message: 'Gagal masuk akun demo: ' + error.message });
+      setIsDemoLoading(false);
+    } else {
+      router.push('/daftar');
+    }
+  };
 
   const {
     register,
@@ -172,6 +190,23 @@ export default function LoginPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 )}
+              </Button>
+
+              <div className="relative flex items-center py-2">
+                <div className="flex-grow border-t border-slate-200"></div>
+                <span className="flex-shrink-0 mx-4 text-slate-400 text-xs">atau</span>
+                <div className="flex-grow border-t border-slate-200"></div>
+              </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                size="lg"
+                isLoading={isDemoLoading}
+                onClick={handleDemoLogin}
+              >
+                {isDemoLoading ? 'Masuk...' : 'Masuk sebagai Akun Demo (Reviewer)'}
               </Button>
 
               <p className="text-xs text-slate-400 text-center">

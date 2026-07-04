@@ -442,45 +442,52 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {[
               {
                 title: 'Lab Kamar Simulasi Perhotelan',
                 subtitle: 'Mockup Room standar bintang 4',
-                icon: '🏨',
-                gradient: 'from-rose-100 to-rose-200',
+                image: '/images/fasilitas/lab_perhotelan.jpg',
                 accent: 'bg-rose-900',
               },
               {
                 title: 'Kitchen Lab Nusantara & Internasional',
                 subtitle: 'Tata Boga dengan peralatan profesional',
-                icon: '👨‍🍳',
-                gradient: 'from-amber-100 to-orange-200',
+                image: '/images/fasilitas/lab_boga.jpg',
                 accent: 'bg-amber-600',
               },
               {
                 title: 'Bank Mini & Lab Akuntansi',
                 subtitle: 'Simulasi transaksi perbankan nyata',
-                icon: '🏦',
-                gradient: 'from-slate-100 to-slate-200',
+                image: '/images/fasilitas/lab_akuntansi.jpg',
                 accent: 'bg-slate-700',
               },
+              {
+                title: 'Laboratorium Pariwisata',
+                subtitle: 'Simulasi Biro Perjalanan / Tour Guiding',
+                image: '/images/fasilitas/lab_pariwisata.jpg',
+                accent: 'bg-emerald-600',
+              },
             ].map((item) => (
-              <div key={item.title} className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-slate-100">
+              <div key={item.title} className="group flex flex-col rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-slate-100">
                 {/* Mockup Image Area */}
-                <div className={`relative h-52 bg-gradient-to-br ${item.gradient} flex items-center justify-center overflow-hidden`}>
-                  <span className="text-8xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 select-none">
-                    {item.icon}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100">
+                  <Image 
+                    src={item.image} 
+                    alt={item.title} 
+                    fill 
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
                 </div>
                 {/* Info */}
-                <div className="p-5">
+                <div className="p-5 flex-grow">
                   <span className={`inline-block text-white text-xs font-bold px-3 py-1 rounded-full mb-3 ${item.accent}`}>
                     Laboratorium
                   </span>
-                  <h3 className="font-extrabold text-rose-900 text-base leading-tight mb-1">{item.title}</h3>
-                  <p className="text-slate-500 text-sm">{item.subtitle}</p>
+                  <h3 className="font-extrabold text-rose-900 text-sm sm:text-base leading-tight mb-2">{item.title}</h3>
+                  <p className="text-slate-500 text-xs sm:text-sm">{item.subtitle}</p>
                 </div>
               </div>
             ))}
