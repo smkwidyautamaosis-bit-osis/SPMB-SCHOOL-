@@ -220,7 +220,7 @@ export default async function StatusPage({
                   { label: 'NISN', value: pendaftar.nisn },
                   { label: 'Jenis Kelamin', value: pendaftar.jenis_kelamin },
                   { label: 'Tempat, Tanggal Lahir', value: `${pendaftar.tempat_lahir}, ${formatTanggal(pendaftar.tanggal_lahir)}` },
-                  { label: 'No. HP', value: pendaftar.no_hp },
+                  { label: 'No. HP / WhatsApp', value: pendaftar.no_whatsapp },
                   { label: 'Sekolah Asal', value: pendaftar.asal_sekolah },
                   { label: 'Program Keahlian', value: pendaftar.jurusan?.nama_jurusan ?? '-' },
                 ].map((item) => (
