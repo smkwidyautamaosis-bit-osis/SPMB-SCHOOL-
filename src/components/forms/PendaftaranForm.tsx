@@ -199,7 +199,7 @@ export function PendaftaranForm({ jurusanList, userId, userEmail }: PendaftaranF
     watch,
     formState: { errors },
   } = useForm<PendaftaranFormData>({
-    resolver: zodResolver(pendaftaranSchema),
+    resolver: zodResolver(pendaftaranSchema) as any,
     defaultValues: {
       kewarganegaraan: 'Indonesia',
       jenis_kelamin: undefined,
