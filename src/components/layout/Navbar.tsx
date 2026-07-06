@@ -88,7 +88,32 @@ export function Navbar() {
               Jadwal SPMB
             </Link>
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
+                {/* Profil User Info */}
+                <div className="hidden lg:flex items-center gap-3 mr-2 border-r border-slate-200 pr-5">
+                  {user.user_metadata?.avatar_url ? (
+                    <Image
+                      src={user.user_metadata.avatar_url}
+                      alt="Avatar"
+                      width={32}
+                      height={32}
+                      className="rounded-full ring-2 ring-slate-100 object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 bg-rose-100 text-rose-700 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-rose-50">
+                      {user.email?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <div className="flex flex-col justify-center">
+                    <span className="text-sm font-bold text-slate-800 leading-none mb-1">
+                      {user.user_metadata?.full_name || 'Calon Siswa'}
+                    </span>
+                    <span className="text-xs text-slate-500 truncate max-w-[150px] leading-none">
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
+
                 <Link href="/status">
                   <Button variant="outline" size="sm">
                     Status Pendaftaran
@@ -99,6 +124,7 @@ export function Navbar() {
                   size="sm"
                   onClick={handleLogout}
                   isLoading={isLoggingOut}
+                  className="text-rose-700 hover:text-rose-900 hover:bg-rose-50"
                 >
                   Keluar
                 </Button>
@@ -145,16 +171,39 @@ export function Navbar() {
             </Link>
             {user ? (
               <>
+                <div className="px-4 py-3 flex items-center gap-3 border-b border-slate-100 mb-2">
+                  {user.user_metadata?.avatar_url ? (
+                    <Image
+                      src={user.user_metadata.avatar_url}
+                      alt="Avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full ring-2 ring-slate-100 object-cover"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-rose-100 text-rose-700 rounded-full flex items-center justify-center font-bold text-lg ring-2 ring-rose-50 flex-shrink-0">
+                      {user.email?.charAt(0).toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold text-slate-800 truncate leading-tight">
+                      {user.user_metadata?.full_name || 'Calon Siswa'}
+                    </span>
+                    <span className="text-xs text-slate-500 truncate leading-tight">
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
                 <Link
                   href="/status"
-                  className="block px-4 py-2 rounded-xl text-sm font-medium text-rose-900 hover:bg-rose-50 transition-colors"
+                  className="block px-4 py-2.5 rounded-xl text-sm font-medium text-rose-900 hover:bg-rose-50 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Status Pendaftaran
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
+                  className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
                 >
                   Keluar
                 </button>
