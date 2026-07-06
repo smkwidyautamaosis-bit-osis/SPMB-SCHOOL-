@@ -33,7 +33,7 @@ id, pendaftar_id (FK), jenis_dokumen (kk/akta_lahir/ijazah_skl/pas_foto), file_u
 RLS aktif di semua tabel — user hanya boleh akses data miliknya sendiri (auth.uid()).
 
 ## Auth
-- Magic Link Email saja (signInWithOtp), TIDAK ADA password, TIDAK ADA Google OAuth
+- Google Sign-In (OAuth) sebagai metode utama.
 - Callback route: /auth/callback
 
 ## Storage
