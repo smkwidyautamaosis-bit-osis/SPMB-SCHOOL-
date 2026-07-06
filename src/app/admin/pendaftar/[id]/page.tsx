@@ -155,8 +155,8 @@ export default async function AdminPendaftarDetailPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ===== Kolom Kiri: Data Lengkap ===== */}
-        <div className="lg:col-span-2 space-y-5">
-          {/* Data Diri */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Data Diri Calon Siswa */}
           <Card className="p-6 sm:p-8 border-slate-100 shadow-sm">
             <h3 className="font-extrabold text-rose-900 mb-6 flex items-center gap-2 text-lg">
               <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -165,24 +165,40 @@ export default async function AdminPendaftarDetailPage({
               </svg>
               Data Diri Calon Siswa
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
               <InfoRow label="Nama Lengkap" value={pendaftar.nama_lengkap} />
+              <InfoRow label="Nama Panggilan" value={pendaftar.nama_panggilan ?? '-'} />
               <InfoRow label="NISN" value={pendaftar.nisn} />
               <InfoRow label="Jenis Kelamin" value={pendaftar.jenis_kelamin} />
               <InfoRow
                 label="Tempat, Tanggal Lahir"
                 value={`${pendaftar.tempat_lahir}, ${formatTanggal(pendaftar.tanggal_lahir)}`}
               />
+              <InfoRow label="Agama" value={pendaftar.agama ?? '-'} />
+              <InfoRow label="Kewarganegaraan" value={pendaftar.kewarganegaraan ?? '-'} />
               <InfoRow label="No. HP / WhatsApp" value={pendaftar.no_whatsapp} />
-              <InfoRow label="Jurusan Pilihan" value={pendaftar.jurusan?.nama_jurusan ?? '-'} />
               <div className="sm:col-span-2">
-                <InfoRow label="Alamat" value={pendaftar.alamat} />
+                <InfoRow label="Alamat Rumah" value={pendaftar.alamat} />
               </div>
             </div>
           </Card>
 
-          {/* Data Orang Tua */}
-          <Card className="p-6 sm:p-8 border-slate-100 shadow-sm mt-6">
+          {/* Data Asal Sekolah */}
+          <Card className="p-6 sm:p-8 border-slate-100 shadow-sm">
+            <h3 className="font-extrabold text-rose-900 mb-6 flex items-center gap-2 text-lg">
+              <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              Data Asal Sekolah
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
+              <InfoRow label="Nama Sekolah Asal" value={pendaftar.asal_sekolah} />
+              <InfoRow label="Alamat Sekolah Asal" value={pendaftar.alamat_sekolah_asal ?? '-'} />
+            </div>
+          </Card>
+
+          {/* Data Orang Tua / Wali */}
+          <Card className="p-6 sm:p-8 border-slate-100 shadow-sm">
             <h3 className="font-extrabold text-rose-900 mb-6 flex items-center gap-2 text-lg">
               <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path className="fill-amber-500" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.19l7 3.11V11c0 4.52-2.98 8.69-7 9.93-4.02-1.24-7-5.41-7-9.93V6.3l7-3.11z" />
@@ -192,14 +208,48 @@ export default async function AdminPendaftarDetailPage({
               </svg>
               Data Orang Tua / Wali
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
               <InfoRow label="Nama Orang Tua / Wali" value={pendaftar.nama_orang_tua} />
               <InfoRow label="No. HP Orang Tua / Wali" value={pendaftar.no_hp_orang_tua} />
-              <InfoRow label="Asal Sekolah" value={pendaftar.asal_sekolah} />
-              <InfoRow
-                label="Tanggal Pendaftaran"
-                value={formatTanggal(pendaftar.created_at, true)}
-              />
+              <InfoRow label="Pekerjaan Orang Tua" value={pendaftar.pekerjaan_orang_tua ?? '-'} />
+              <InfoRow label="Penghasilan Orang Tua" value={pendaftar.penghasilan_orang_tua ?? '-'} />
+            </div>
+          </Card>
+
+          {/* Data Keluarga & Domisili */}
+          <Card className="p-6 sm:p-8 border-slate-100 shadow-sm">
+            <h3 className="font-extrabold text-rose-900 mb-6 flex items-center gap-2 text-lg">
+              <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Keluarga & Domisili
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
+              <InfoRow label="Anak ke-" value={pendaftar.anak_ke ? `${pendaftar.anak_ke}` : '-'} />
+              <InfoRow label="Jumlah Saudara" value={pendaftar.jumlah_saudara ? `${pendaftar.jumlah_saudara}` : '-'} />
+              <InfoRow label="Bahasa Sehari-hari" value={pendaftar.bahasa_sehari_hari ?? '-'} />
+              <InfoRow label="Tinggal Bersama" value={pendaftar.tinggal_bersama ?? '-'} />
+              <InfoRow label="Jarak ke Sekolah" value={pendaftar.jarak_ke_sekolah ?? '-'} />
+              <InfoRow label="Transportasi" value={pendaftar.transportasi ?? '-'} />
+            </div>
+          </Card>
+
+          {/* Data Kesehatan */}
+          <Card className="p-6 sm:p-8 border-slate-100 shadow-sm">
+            <h3 className="font-extrabold text-rose-900 mb-6 flex items-center gap-2 text-lg">
+              <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              Riwayat Kesehatan
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
+              <InfoRow label="Berat Badan" value={pendaftar.berat_kg ? `${pendaftar.berat_kg} kg` : '-'} />
+              <InfoRow label="Tinggi Badan" value={pendaftar.tinggi_cm ? `${pendaftar.tinggi_cm} cm` : '-'} />
+              <InfoRow label="Golongan Darah" value={pendaftar.gol_darah ?? '-'} />
+              <InfoRow label="Riwayat Penyakit" value={pendaftar.riwayat_penyakit ?? '-'} />
+              <div className="sm:col-span-2">
+                <InfoRow label="Kelainan Jasmani" value={pendaftar.kelainan_jasmani ?? '-'} />
+              </div>
             </div>
           </Card>
 
@@ -273,7 +323,24 @@ export default async function AdminPendaftarDetailPage({
 
         {/* ===== Kolom Kanan: Update Status ===== */}
         <div className="lg:col-span-1">
-          <div className="sticky top-6">
+          <div className="sticky top-6 space-y-6">
+            
+            {/* Card: Informasi Pendaftaran */}
+            <Card className="p-6 border-slate-100 shadow-sm bg-slate-50/50">
+              <h3 className="font-extrabold text-slate-800 mb-5 flex items-center gap-2 text-lg">
+                <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Informasi Pendaftaran
+              </h3>
+              <div className="space-y-5">
+                <InfoRow label="Nomor Pendaftaran" value={pendaftar.nomor_pendaftaran} />
+                <InfoRow label="Jurusan Pilihan" value={pendaftar.jurusan?.nama_jurusan ?? '-'} />
+                <InfoRow label="Tanggal Daftar" value={formatTanggal(pendaftar.created_at, true)} />
+              </div>
+            </Card>
+
+            {/* Card: Update Status */}
             <Card className="p-6 border-slate-100 shadow-sm">
               <h3 className="font-extrabold text-rose-900 mb-5 flex items-center gap-2 text-lg">
                 <svg className="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import type { Pendaftar, Jurusan, StatusPendaftaran } from '@/types';
 
@@ -59,10 +60,11 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
 
   const handleExportCSV = () => {
     // Header CSV
-    const headers = ['Nomor Pendaftaran', 'Nama Lengkap', 'NISN', 'Asal Sekolah', 'Pilihan Jurusan', 'No HP', 'Status'];
+    const headers = ['Akun Google', 'Nomor Pendaftaran', 'Nama Lengkap', 'NISN', 'Asal Sekolah', 'Pilihan Jurusan', 'No HP', 'Status'];
     
     // Baris data (menggunakan data yang difilter saat ini)
     const rows = filtered.map(p => [
+      `"${p.email || '-'}"`,
       p.nomor_pendaftaran,
       `"${p.nama_lengkap}"`, // kutip untuk menghindari error jika ada koma di nama
       `"${p.nisn}"`, // perlakukan sebagai string
@@ -215,6 +217,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
                   {[
+                    'Akun Google',
                     'Nomor Pendaftaran',
                     'Nama Lengkap',
                     'Jurusan',
@@ -224,7 +227,7 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
                   ].map((col) => (
                     <th
                       key={col}
-                      className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
+                      className="px-4 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap"
                     >
                       {col}
                     </th>
@@ -238,24 +241,44 @@ export function PendaftarTable({ pendaftarList, jurusanList }: PendaftarTablePro
                     onClick={() => router.push(`/admin/pendaftar/${p.id}`)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
-                    <td className="px-6 py-4 font-mono text-xs font-semibold text-rose-800 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        {p.avatar_url ? (
+                          <Image
+                            src={p.avatar_url}
+                            alt="Avatar"
+                            width={32}
+                            height={32}
+                            className="rounded-full ring-2 ring-slate-100 object-cover shrink-0"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 bg-rose-100 text-rose-700 rounded-full flex items-center justify-center font-bold text-sm ring-2 ring-rose-50 shrink-0">
+                            {p.email?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                        )}
+                        <span className="text-sm font-medium text-slate-700 truncate max-w-[120px] lg:max-w-[150px] xl:max-w-[200px]">
+                          {p.email || '-'}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 font-mono text-xs font-semibold text-rose-800 whitespace-nowrap">
                       {p.nomor_pendaftaran}
                     </td>
-                    <td className="px-6 py-4 font-medium text-slate-800 whitespace-nowrap">
-                      {p.nama_lengkap}
+                    <td className="px-4 py-4 font-medium text-slate-800 min-w-[150px]">
+                      <span className="line-clamp-2">{p.nama_lengkap}</span>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 whitespace-nowrap">
+                    <td className="px-4 py-4 text-slate-600 whitespace-nowrap">
                       {p.jurusan?.nama_jurusan ?? '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <StatusBadge status={p.status} size="sm" />
                     </td>
-                    <td className="px-6 py-4 text-slate-400 text-xs whitespace-nowrap">
+                    <td className="px-4 py-4 text-slate-400 text-xs whitespace-nowrap">
                       {formatTanggal(p.created_at)}
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-medium flex items-center gap-1 whitespace-nowrap">
-                        Lihat Detail
+                    <td className="px-4 py-4 text-right">
+                      <span className="text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-medium inline-flex items-center gap-1 whitespace-nowrap">
+                        Lihat
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>

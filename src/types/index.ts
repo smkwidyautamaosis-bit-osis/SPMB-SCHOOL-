@@ -29,6 +29,9 @@ export interface Pendaftar {
   id: string;
   user_id: string;
   nomor_pendaftaran: string;
+  // Metadata dari auth.users (Google Auth)
+  email?: string;
+  avatar_url?: string;
   // Data Diri
   nama_lengkap: string;
   nama_panggilan?: string | null;
